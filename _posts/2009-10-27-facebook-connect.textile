@@ -18,14 +18,16 @@ Using Facebook Connect turned out to be simple. Surprisingly simple. The steps, 
 Steps 1-5 are fairly well documented in the links above. (The Connect documentation is not bad, but it is disorganized. The links above are some that I found most useful.) Step 6 is the interesting part. 
 
 At the heart of my functionality is a call to <a href="http://wiki.developers.facebook.com/index.php/JS_API_M_FB.Connect.ShowFeedDialog">FB.Connect.showFeedDialog()</a>. My call looks like this: 
-{% highlight javascript %} FB.Connect.showFeedDialog(STI.bundle, STI.template, '', STI.general, null, FB.RequireConnect.promptConnect, STI.formComplete, STI.prompt, story);{% endhighlight %}
+{% highlight js %}
+FB.Connect.showFeedDialog(STI.bundle, STI.template, '', STI.general, null, FB.RequireConnect.promptConnect, STI.formComplete, STI.prompt, story);
+{% endhighlight %}
 
 Let's break down all these arguments:
 * Bundle ID. This is the ID of the feed template you created in step three, above.
 * Template data. This is an object that fills in any variables you defined in your template. In our case, we use it simply to attach an image to the post using the format described <a href="http://wiki.developers.facebook.com/index.php/Template_Data#Using_the_images_Reserved_Token">here</a>.
 * Target. This is the user ID of a friend to post a feed item to. We use a blank string ("") to post to a user's own wall.
 * Body general. This is additional text that will appear below the feed item. We use this to explain what Net Neutrality is and what SavetheInternet.com is all about.
-* Story size is deprecated and you must pass null for this argument.
+* Story size is deprecated and you must pass @null@ for this argument.
 * Require connect determines what should happen if the user hasn't yet connected with Facebook. FB.RequireConnect.promptConnect prompts the user to connect if they aren't already connected.. 
 * Callback is a function that determines what happens after the user completes the feed posting process.
 The final two arguments are optional but useful:
