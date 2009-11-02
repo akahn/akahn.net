@@ -1,0 +1,102 @@
+body {
+  background-color: #7B7381;
+  margin: 0;
+  padding: 0;
+  font-family: Helvetica Neue, Helvetica, sans-serif;
+}
+
+h1 {
+  font-size: 37px;
+}
+
+h1 a, 
+h2 a {
+  color: black;
+  text-decoration: none;
+}
+
+h1 a:hover, 
+h2 a:hover {
+  text-decoration: underline;
+}
+
+p, ol, ul, li, pre, blockquote {
+  font-size: 18px;
+  line-height: 24px;
+  margin: 0 0 14px 0;
+}
+
+p.date {
+  font-size: 14px;
+}
+
+code {
+  font-size: 12px;
+  font-family: Bitstream Vera Sans Mono, Monaco, monospace;
+}
+
+h1, div#body {
+  background-color: white;
+  padding: 0 0 0 26px;
+  float: left;
+  width: 960px;
+}
+
+div#body {
+  -webkit-border-bottom-right-radius: 8px;
+  -moz-border-radius-bottomright: 8px;
+  margin-bottom: 26px;
+}
+
+#footer {
+  -webkit-border-top-right-radius: 12px;
+  -moz-border-radius-topright: 12px;
+  background-color: white;
+  float: left;
+  width: 960px;
+  padding: 0 0 0 26px;
+}
+
+div#content {
+  width: 600px;
+}
+
+.blog h2 {
+  margin-bottom: 0;
+}
+
+a {
+  color: #63424A;
+}
+
+img {
+  float: left;
+  margin: 30px;
+}
+
+p.intro {
+  width: 500px;
+  margin: 36px 0 56px 0;
+  font-size: 37px;
+  line-height: 1.2em;
+}
+
+img.home, img.saab {
+  float: right;
+}
+
+img.home {
+  width: 400px;
+}
+
+#disqus_thread {
+  margin: 30px 0;
+}
+
+ul#dsq-comments li a {
+  font-size: 12px;
+}
+
+.dsq-options {
+  display: none;
+}
