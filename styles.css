@@ -20,19 +20,36 @@ h2 a:hover {
   text-decoration: underline;
 }
 
-p, ol, ul, li, pre, blockquote {
+p, ol, ul, li, pre, code, blockquote {
   font-size: 18px;
   line-height: 24px;
   margin: 0 0 14px 0;
 }
 
+li {
+  margin-bottom: 8px;
+}
+
+pre {
+  margin: 0;
+}
+
+div.highlight {
+  float: left;
+  margin-bottom: 14px;
+}
+
 p.date {
-  font-size: 14px;
 }
 
 code {
-  font-size: 12px;
+  background-color: #DDD;
+  border: 1px solid #ccc;
   font-family: Bitstream Vera Sans Mono, Monaco, monospace;
+}
+
+a code {
+  text-decoration: underline;
 }
 
 h1, div#body {
@@ -58,7 +75,7 @@ div#body {
 }
 
 div#content {
-  width: 600px;
+  width: 620px;
 }
 
 .blog h2 {

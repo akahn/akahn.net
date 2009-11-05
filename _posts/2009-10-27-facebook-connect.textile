@@ -1,35 +1,44 @@
 ---
-title: Facebook Connect
+title: Getting started with Facebook Connect
 layout: blog
 ---
 
-At Free Press, when a user signs a petition or shows support for our issues on one of our sites, we make sure that the users can announce this far and wide. In the past, we've done this with links to <a href="http://www.facebook.com/share_partners.php">Facebook's sharer.php</a> (<a href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fwww.google.com">example</a>) and Twitter's status parameter (<a href="http://twitter.com/home?status=Not%20too%20shabby!">example</a>). 
+At Free Press, when a user signs a petition or shows support for our issues on one of our sites, we want users to spread the word. We want users to share the story they told, or the petition they signed, and to encourage others to do the same. We do this primarily with links to "Facebook's @sharer.php@":http://www.facebook.com/sharer.php?u=http://www.akahn.net{{ page.url }} and "Twitter's status parameter":http://twitter.com/home?status=http://www.akahn.net{{ page.url }}%20--%20Not%20too%20shabby. 
 
-But the resulting feed item of Facebook's sharer.php is not great. The update that ends up in a user's feed looks rather bland and generic. We wanted a feed item that looked branded, looked good, and compelled a user's friends to also take action. Likewise, the user experience is sub-par; we have to either pop up a new window, or take the user off of our page. In addition, the sharer.php page itself is not the greatest looking. This is where Facebook Connect comes in.
+But @sharer.php@ left us frustrated with its awkward interface and lack of branding. What about the pretty updates that Facebook applications produce? We wanted a feed item that looked branded, looked good, and compelled a user's friends to also take action. This is where Facebook Connect comes in.
 
-Using Facebook Connect turned out to be simple. Surprisingly simple. The steps, roughly, are: 
+Using Facebook Connect for this task turned out to be simple. Surprisingly simple. Here's the routine:
 
 # "Create a Facebook application":http://www.facebook.com/developers/
 # "Create a file to allow cross-domain JavaScript communication":http://wiki.developers.facebook.com/index.php/Cross_Domain_Communication_Channel
-# "Create a template for your feed item":http://developers.facebook.com/tools.php?feed
 # "Include Facebook's JavaScript library":http://wiki.developers.facebook.com/index.php/FeatureLoader.js.php
-# Write some JavaScript!
+# Write some JavaScript
 
-Steps 1-5 are fairly well documented in the links above. (The Connect documentation is not bad, but it is disorganized. The links above are some that I found most useful.) Step 6 is the interesting part. 
+Steps 1-5 are fairly well documented in the links above. Step 6 is the interesting part. Take a look at the code below.
 
-At the heart of my functionality is a call to <a href="http://wiki.developers.facebook.com/index.php/JS_API_M_FB.Connect.ShowFeedDialog">FB.Connect.showFeedDialog()</a>. My call looks like this: 
 {% highlight js %}
-FB.Connect.showFeedDialog(STI.bundle, STI.template, '', STI.general, null, FB.RequireConnect.promptConnect, STI.formComplete, STI.prompt, story);
+var AK = {
+  apiKey:  "de24e7cfd602218871fc8e30b3dd8a5f",
+  message: "Facebook Connect is easy!",
+  attachment: {
+    name: "Updating from akahn.net",
+    href: "http://www.akahn.net",
+    caption: "So cool!",
+    media: [{
+      type: "image",
+      src:  "http://farm4.static.flickr.com/3314/3273040332_e48044d08a.jpg",
+      href: "http://www.akahn.net"
+    }]
+  },
+}
+FB.init(AK.apiKey, "/xd_comm.html");
+FB.ensureInit(function() {
+  FB.Connect.streamPublish(AK.message, AK.attachment);
+});
 {% endhighlight %}
 
-Let's break down all these arguments:
-* Bundle ID. This is the ID of the feed template you created in step three, above.
-* Template data. This is an object that fills in any variables you defined in your template. In our case, we use it simply to attach an image to the post using the format described <a href="http://wiki.developers.facebook.com/index.php/Template_Data#Using_the_images_Reserved_Token">here</a>.
-* Target. This is the user ID of a friend to post a feed item to. We use a blank string ("") to post to a user's own wall.
-* Body general. This is additional text that will appear below the feed item. We use this to explain what Net Neutrality is and what SavetheInternet.com is all about.
-* Story size is deprecated and you must pass @null@ for this argument.
-* Require connect determines what should happen if the user hasn't yet connected with Facebook. FB.RequireConnect.promptConnect prompts the user to connect if they aren't already connected.. 
-* Callback is a function that determines what happens after the user completes the feed posting process.
-The final two arguments are optional but useful:
-* User message prompt
-* User message is the string of text that the user will be posting to their wall. This should be some text that the user just posted on our site. In our case 
+<script type="text/javascript" src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US"></script>
+<script type="text/javascript" src="/facebook.js"></script>
+<a class="connect" href="#">Try it out</a>
+
+And that's it. Obviously it'll take considerably more effort to use Facebook Connect to actually integrate your web application with Facebook, but sometimes all you need is this basic use pattern.
