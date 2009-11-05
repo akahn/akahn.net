@@ -26,6 +26,10 @@ p, ol, ul, li, pre, code, blockquote {
   margin: 0 0 14px 0;
 }
 
+code {
+  font-size: 16px;
+}
+
 li {
   margin-bottom: 8px;
 }
@@ -43,8 +47,7 @@ p.date {
 }
 
 code {
-  background-color: #DDD;
-  border: 1px solid #ccc;
+  background-color: #eee;
   font-family: Bitstream Vera Sans Mono, Monaco, monospace;
 }
 
@@ -116,4 +119,21 @@ ul#dsq-comments li a {
 
 .dsq-options {
   display: none;
+}
+
+a.connect {
+  background-color: #eee;
+  padding: 8px 12px;
+  font-weight: bold;
+  text-decoration:none;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 8px;
+}
+
+p.connect {
+  margin: 24px 0;
+}
+
+a.connect:hover {
+  text-decoration: underline;
 }
