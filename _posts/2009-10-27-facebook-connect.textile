@@ -26,7 +26,7 @@ var AK = {
     caption: "So cool!",
     media: [{
       type: "image",
-      src:  "http://farm4.static.flickr.com/3314/3273040332_e48044d08a.jpg",
+      src:  "http://akahn.net/images/shoes.jpg",
       href: "http://www.akahn.net"
     }]
   },
@@ -39,6 +39,17 @@ FB.ensureInit(function() {
 
 <script type="text/javascript" src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US"></script>
 <script type="text/javascript" src="/facebook.js"></script>
-<a class="connect" href="#">Try it out</a>
 
-And that's it. Obviously it'll take considerably more effort to use Facebook Connect to actually integrate your web application with Facebook, but sometimes all you need is this basic use pattern.
+What's going on here? First, I'm creating an object, @AK@, to store the various bits of information I need. This includes an API key, the default message that the user will be posting to their feed, along with some other bits of text and an image.
+
+I then get the API ready, using "@FB.init@":http://wiki.developers.facebook.com/index.php/JS_API_M_FB.Init, specifying my API key and the location of my cross-domain communication file.
+
+Then I make sure that the API has finished loading, using "@FB.ensureInit@":http://wiki.developers.facebook.com/index.php/JS_API_M_FB.Bootstrap.EnsureInit. I pass in a function, to be executed once the API has finished loading.
+
+Then, in the function, I call "@FB.Connect.streamPublish@":http://wiki.developers.facebook.com/index.php/FB.Connect.streamPublish. I pass in the message and the attachment object that I defined earlier. The user is prompted to log into Facebook if they haven't yet and then are prompted to update their status, right in a pretty modal window. Try it out below:
+
+<p class="connect"><a class="connect" href="#">Post to my Facebook wall!</a></p>
+
+All that setup for one little call to @FB.Connect.streamPublish@! But it was worth it. The feed item is attractive and customized. The user didn't have to face the ugly @sharer.php@ screen or leave our site.
+
+And that's it. Of course, it'll take more effort to use Facebook Connect to actually integrate your web application with Facebook, but sometimes all you need is a pretty feed item.
