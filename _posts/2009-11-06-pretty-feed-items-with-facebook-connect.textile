@@ -1,9 +1,9 @@
 ---
-title: Getting started with Facebook Connect
+title: Pretty Feed Items with Facebook Connect
 layout: blog
 ---
 
-At Free Press, when a user signs a petition or shows support for our issues on one of our sites, we want users to spread the word. We want users to share the story they told, or the petition they signed, and to encourage others to do the same. We do this primarily with links to "Facebook's @sharer.php@":http://www.facebook.com/sharer.php?u=http://www.akahn.net{{ page.url }} and "Twitter's status parameter":http://twitter.com/home?status=http://www.akahn.net{{ page.url }}%20--%20Not%20too%20shabby. 
+At Free Press, when a user signs a petition or shows support for our issues on one of our sites, we want them to spread the word. We want to make it easy for users to share the story they told, or the petition they signed, and to encourage others to do the same. We usually do this with links to "Facebook's @sharer.php@":http://www.facebook.com/sharer.php?u=http://www.akahn.net{{ page.url }} and "Twitter's status parameter":http://twitter.com/home?status=http://www.akahn.net{{ page.url }}%20--%20Not%20too%20shabby. 
 
 But @sharer.php@ left us frustrated with its awkward interface and lack of branding. What about the pretty updates that Facebook applications produce? We wanted a feed item that looked branded, looked good, and compelled a user's friends to also take action. This is where Facebook Connect comes in.
 
@@ -40,16 +40,14 @@ FB.ensureInit(function() {
 <script type="text/javascript" src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US"></script>
 <script type="text/javascript" src="/facebook.js"></script>
 
-What's going on here? First, I'm creating an object, @AK@, to store the various bits of information I need. This includes an API key, the default message that the user will be posting to their feed, along with some other bits of text and an image.
+What's going on here? First, I'm creating an object, @AK@, to store the various pieces of data I need. This includes an API key, the default message that the user will be posting to their feed, along with some other bits of text, and an image.
 
 I then get the API ready, using "@FB.init@":http://wiki.developers.facebook.com/index.php/JS_API_M_FB.Init, specifying my API key and the location of my cross-domain communication file.
 
 Then I make sure that the API has finished loading, using "@FB.ensureInit@":http://wiki.developers.facebook.com/index.php/JS_API_M_FB.Bootstrap.EnsureInit. I pass in a function, to be executed once the API has finished loading.
 
-Then, in the function, I call "@FB.Connect.streamPublish@":http://wiki.developers.facebook.com/index.php/FB.Connect.streamPublish. I pass in the message and the attachment object that I defined earlier. The user is prompted to log into Facebook if they haven't yet and then are prompted to update their status, right in a pretty modal window. Try it out below:
+In the function, I call "@FB.Connect.streamPublish@":http://wiki.developers.facebook.com/index.php/FB.Connect.streamPublish. I pass in the message and the attachment object that I defined earlier. If the user is logged in on Facebook, they're presented with a modal popup inviting them to post to their feed. If not, they're prompted to log in before they are invited to create a feed item. Try it out below:
 
-<p class="connect"><a class="connect" href="#">Post to my Facebook wall!</a></p>
+<p class="connect"><a class="connect" href="http://www.facebook.com/sharer.php?u=http://akahn.net{{ page.url }}">Post to my Facebook wall!</a></p>
 
-All that setup for one little call to @FB.Connect.streamPublish@! But it was worth it. The feed item is attractive and customized. The user didn't have to face the ugly @sharer.php@ screen or leave our site.
-
-And that's it. Of course, it'll take more effort to use Facebook Connect to actually integrate your web application with Facebook, but sometimes all you need is a pretty feed item.
+And that's it! It takes a lot of setup just to make one little call to @FB.Connect.streamPublish@. But the smooth user experience and the customized, pretty feed item make it all worthwhile.
