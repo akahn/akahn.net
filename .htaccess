@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^www.akahn.net$ [NC]
+RewriteRule ^(.*)$ http://akahn.net/$1 [R=301,L]
+
