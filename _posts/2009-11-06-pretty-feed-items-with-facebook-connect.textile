@@ -14,7 +14,7 @@ Using Facebook Connect for this task turned out to be simple. Surprisingly simpl
 # "Include Facebook's JavaScript library":http://wiki.developers.facebook.com/index.php/FeatureLoader.js.php
 # Write some JavaScript
 
-Steps 1-5 are fairly well documented in the links above. Step 6 is the interesting part. Take a look at the code below.
+Steps 1-3 are fairly well documented in the links above. Step 4 is the interesting part. Take a look at the code below.
 
 {% highlight js %}
 var AK = {
