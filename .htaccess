@@ -1,4 +1,7 @@
+# Redirect to akahn.net
 RewriteEngine On
 RewriteCond %{HTTP_HOST} ^www.akahn.net$ [NC]
 RewriteRule ^(.*)$ http://akahn.net/$1 [R=301,L]
 
+# Send UTF-8 character set header
+AddDefaultCharset UTF-8
