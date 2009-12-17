@@ -1,5 +1,5 @@
 ---
-title: Using FakeWeb With Regular expressions
+title: FakeWeb's Hidden Power: Regular Expressions
 layout: blog
 description: Fakeweb is a great way to speed up your tests and remove dependencies on external web services. This post describes its handy regular expression feature, which allows you to register URLs to stub based on a regex pattern.
 ---
