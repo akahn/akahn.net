@@ -3,11 +3,16 @@
   <head>
     <title>Alex Kahn | {{ page.title }}</title>
     <meta charset="utf-8">
-    <meta name="description" content="Website and blog of Western Massachusetts-based Drupal and Ruby developer Alex Kahn">
+    {% if {{page.description}} != null %}
+      <meta name="description" content="{{ page.description }}">
+    {% else %}
+      <meta name="description" content="Website and blog of Western Massachusetts-based Drupal and Ruby developer Alex Kahn.">
+    {% endif %}
     <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="Alex Kahn Blog" />
     <link rel="stylesheet" media="screen" href="/css/styles.css" />
     <link rel="stylesheet" media="screen" href="/css/syntax.css" />
     <link rel="icon" href="/images/favicon.png" type="image/png" />
+    <link rel="image_src" href="http://farm4.static.flickr.com/3314/3273040332_e48044d08a.jpg" />
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
   </head>
   <body class="{{ page.home }}">
