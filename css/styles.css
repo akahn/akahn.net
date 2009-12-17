@@ -70,8 +70,9 @@ p, ol, ul, li, pre, code, blockquote {
   margin: 0 0 14px 0;
 }
 
-code {
-  font-size: 16px;
+code, pre {
+  font-size: 14px;
+  line-height: 20px;
 }
 
 ol, ul {
@@ -89,6 +90,10 @@ pre {
 div.highlight {
   float: left;
   margin-bottom: 14px;
+}
+
+p {
+  clear: left;
 }
 
 p.date {
@@ -114,6 +119,7 @@ div#body {
   -webkit-border-bottom-right-radius: 8px;
   -moz-border-radius-bottomright: 8px;
   margin-bottom: 26px;
+  padding-bottom: 16px;
 }
 
 #footer {
