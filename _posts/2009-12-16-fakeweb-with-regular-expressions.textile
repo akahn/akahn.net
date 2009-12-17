@@ -1,0 +1,31 @@
+---
+title: Using FakeWeb With Regular expressions
+layout: blog
+description: Fakeweb is a great way to speed up your tests and remove dependencies on external web services. This post describes its handy regular expression feature, which allows you to register URLs to stub based on a regex pattern.
+---
+"FakeWeb":http://fakeweb.rubyforge.org/ is a great way to speed up your tests and remove dependencies on external web services. Using FakeWeb is simple: specify a URL for FakeWeb to respond to, and give it the response you expect from the request. For example:
+
+{% highlight ruby %}
+FakeWeb.register_uri(:get, "http://www.google.com", :body => "Stubbed Google!")
+HTTParty.get("http://www.google.com") # => "Stubbed Google!"
+{% endhighlight %}
+
+Now FakeWeb will prevent your code from making an actual HTTP request and instead it will return the response you specified. But what if your application makes requests to URLs with query parameters? It would be tedious to register each URL with FakeWeb:
+
+{% highlight ruby %}
+FakeWeb.register_uri(:get, "http://www.google.com/search?q=fakeweb", :body => "Stubbed Google!")
+FakeWeb.register_uri(:get, "http://www.google.com/search?q=excited+kitten", :body => "Stubbed Google!")
+FakeWeb.register_uri(:get, "http://www.google.com/search?q=ponies", :body => "Stubbed Google!")
+{% endhighlight %}
+
+Thankfully, FakeWeb has a (slightly underdocumented) solution for this. Instead of passing a string to @FakeWeb.register_uri@, pass it a regular expression (using Ruby's @%r||@ syntax to avoid having to escape forward slashes):
+
+{% highlight ruby %}
+FakeWeb.register_uri(:get, %r|http://www.google.com/search\?q=|, :body => "A bunch of results")
+HTTParty.get("http://www.google.com/search?q=tunisia") # => "A bunch of results"
+HTTParty.get("http://www.google.com/search?q=vegan+latkes") # => "A bunch of results"
+{% endhighlight %}
+
+By registering a regular expression, FakeWeb will respond to any HTTP GET request whose URL matches the pattern you've supplied. Your test suite can make requests with all different query parameters without having to register each individual URL. This feature adds a lot of flexibility to FakeWeb and makes it feasible to stub out your application's HTTP requests, even when complex, changing query parameters are involved.
+
+For a general overview of FakeWeb, as well a some far-less-contrived examples of its use, check out Josh Nichols' post, "Stop Net::HTTP dead in its tracks":http://technicalpickles.com/posts/stop-net-http-dead-in-its-tracks-with-fakeweb/. Also check out "FakeWeb on GitHub":http://github.com/chrisk/fakeweb.
