@@ -38,7 +38,7 @@ FB.ensureInit(function() {
 {% endhighlight %}
 
 <script type="text/javascript" src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US"></script>
-<script type="text/javascript" src="/facebook.js"></script>
+<script type="text/javascript" src="/js/facebook.js"></script>
 
 What's going on here? First, I'm creating an object, @AK@, to store the various pieces of data I need. This includes an API key, the default message that the user will be posting to their feed, along with some other bits of text, and an image.
 
