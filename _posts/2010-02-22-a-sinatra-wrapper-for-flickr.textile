@@ -1,0 +1,13 @@
+---
+layout: blog
+title: A Sinatra Wrapper For Flickr
+published: false
+---
+
+Over the last one and a half years, "Esther":http://www.estherswhite.net has produced a large quantity of monotype prints at a local printmaking studio. She's been scanning her work and posting them to Flickr. She recently experimented with using Tumblr to create a stylish gallery of this work. But scanning her work, adding metadata (titles and medium information), uploading to Flickr, followed by posting each piece to Tumblr proved to be a laborious process. How could we streamline this process? 
+
+The answer is a Sinatra application that wraps the Flickr API in a warm embrace. On the homepage, the app makes a request to Flickr, asking for the list of images in Esther's printmaking photoset and renders them as thumbnails, each one linking to an individual page. Each individual page the app makes another request and renders a larger image along with its title and description. This means no more managing the art in two places (Flickr and Tumblr)! Now, Flickr itself is the CMS.
+
+But isn't it slow to make an API request to Flickr for every visit to the site? Well, that's a trick question. Making an API call to Flickr and then responding takes the site about 500ms &ndash; respectable but not exactly speedy. But since this app is hosted on Heroku, and "Heroku uses Varnish":http://docs.heroku.com/http-caching as a gateway cache<super>1</super>, most requests don't actually reach Sinatra. The application sets `Cache-Control` headers that tell Varnish to serve a static representation of the page rather than sending the request through to the application. This means that rather than the 500ms response when a Flickr API call is involved, the documents are served at lightning speed &ndash; well under 100ms.
+
+<super>1</super> For more on HTTP caching, see Ryan Tomayko's excellent "Things Caches Do":http://tomayko.com/writings/things-caches-do
