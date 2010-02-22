@@ -10,10 +10,12 @@ title: Home
 <h2>Recent posts:</h2>
 <ul>
 {% for post in site.posts %}
-  <li>
-    <a href="{{ post.url }}">{{ post.title }}</a>
-    &mdash;
-    {{ post.date | date: "%B %e, %Y" }}
-  </li>
+  {% if post.published != false %}
+    <li>
+      <a href="{{ post.url }}">{{ post.title }}</a>
+      &mdash;
+      {{ post.date | date: "%B %e, %Y" }}
+    </li>
+  {% endif %}
 {% endfor %}
 </ul>
