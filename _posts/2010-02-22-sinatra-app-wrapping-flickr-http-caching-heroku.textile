@@ -1,6 +1,6 @@
 ---
 layout: blog
-title: Sinatra Wrapping Flickr, HTTP Caching and Heroku
+title: A Sinatra App Wrapping Flickr, HTTP Caching and Heroku
 ---
 
 In the last several months, "Esther":http://www.estherswhite.net has produced a large quantity of monotype prints at a local printmaking studio. She's been scanning her work and posting it to Flickr. Recently she experimented with using Tumblr to create a stylish gallery of this work. But this process &mdash; scanning, adding metadata (title, medium, size), uploading to Flickr, followed by posting each piece to Tumblr &mdash; proved to be laborious. So we sought to streamline this workflow, hoping to eliminate a step or two.
