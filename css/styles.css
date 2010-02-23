@@ -198,3 +198,7 @@ sup {
   font-size: .83em;
   vertical-align: super;
 }
+
+p.notes {
+  font-size: .9em;
+}
