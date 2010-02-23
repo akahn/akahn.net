@@ -198,3 +198,8 @@ p.connect {
 a.connect:hover {
   text-decoration: underline;
 }
+
+sup {
+  font-size: .83em;
+  vertical-align: super;
+}
