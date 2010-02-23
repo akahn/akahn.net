@@ -158,6 +158,7 @@ p.intro {
 }
 
 img.home, img.saab {
+  margin: 20px;
   float: right;
 }
 
