@@ -1,0 +1,68 @@
+---
+layout: blog
+title: "Notes on Redis: Data Modeling, Hashes, and Namespaces"
+date: 2010-03-30
+published: true
+---
+
+h3. What is Redis?
+
+Redis is a simple database. It stores its data in memory and saves a snapshot to disk in the background periodically. It can be used as a simple key-value store like Memcached, but it also supports more complex data types such as lists, sets, sorted sets and hashes. These will come in handy. Redis is versatile and is used for a plethora of tasks: "as a job queue":http://github.com/defunkt/resque, as a cache store, for "tracking downloads of Ruby Gems":http://gist.github.com/296921,  for "storing A/B testing results":http://vanity.labnotes.org/, and even as the backend for "a chat server":http://try.redis-db.com:8082.
+
+Redis has been receiving a lot of praise lately and is the subject of lot of excitement online. This praise is deserved – it's an excellent piece of software. I've had the pleasure of using Redis recently and here are some of my findings.
+
+h3. Our Use Case
+
+On "mediaFAIL":http://mediafail.com, we wanted to track how many mentions a fail receives on Twitter. We wanted to show a count of a fail's Twitter mentions and roll that number into a fail's votes – this feature lies somewhere between "act.ly":http://act.ly/ and "Tweetmeme":http://tweetmeme.com/. Couldn't we just store each tweet in our @votes@ table? Perhaps. But this would break our "user has many fails through votes" association. How do I store this data in Redis?
+
+h3. Data Modeling
+
+My first pass at the problem took advantage Redis's sets. For each fail that was mentioned on Twitter, I created a set containing the users that mention a fail. So, key @fail:1:tweets@ contained the set @['alexanderkahn', 'levjoy', 'TimKarr']@. Since elements in sets must be unique, I wouldn't have to worry about a user making multiple mentions of a fail getting counted more than once. This was an elegant solution: it allowed looking up the number of mentions a fail has received using @SLEN@ (set length) and retrieving all the Twitter usernames for a fail using @SMEMBERS@ (set members).
+
+As I continued work on this feature, I realized that I wanted to link to the specific tweet where a Twitter user mentioned a fail. One way to do that would be to set a string key for each member of a set that corresponds to a member of the @tweet:1:tweets@ set. So, for the above example, I would also set @fail:1:tweet:alexanderkahn@ to "12330508057", the tweet ID for my mention of the fail. But this would cause a lot of keys to be created and mean that looking up usernames and tweet IDs for a fail would require a great deal of queries for a popular fail. Thanks to Redis's new hash data structure, there was a cleaner way. In a hash, I can store both the username and the tweet ID under the same @fail:1:tweets@ key. The hash for this key would look like @{"alexanderkahn" => "12330508057", "levjoy" => "12330508067", "TimKarr" => "12330518057"}@. Since hash keys have to be unique, a Twitter mention can't be counted twice, just like with a set. Now I can look up how many mentions a fail has received with @HLEN@ (hash length) and fetch both usernames an tweet IDS with one @HGETALL@ (hash get all) query. Groovy.
+
+h3. Redis and Ruby
+
+The Ruby library for Redis, written by Ezra Zygmuntowicz, is a pleasure to use. It has certain touches that make it feel like Redis was born for Ruby. One example of this quality is "how it handles Redis's @MULTI@/@EXEC@ transactions":http://github.com/ezmobius/redis-rb/blob/master/lib/redis/client.rb#L395-407:
+
+{% highlight ruby %}
+r = Redis.new
+r.multi do
+  r.set 'foo', 'bar'
+  r.incr 'baz'
+end
+{% endhighlight %}
+
+In the above code, if an exception is raised during the execution of the block, none of the operations inside are committed. This is just a basic transaction like ActiveRecord provides when working with a SQL database, but is neatly implemented in idiomatic Ruby. The block returns the result of each Redis operation in an array.
+
+Another nice Ruby touch is the way the library translates a Redis hashes into a Ruby hashes. When retrieving the entire contents of a hash using @HGETALL@, rather than returning a flat list (1. key, 2.value, 3. secondkey, 4. secondvalue) as the Redis internal protocol does, the library "turns this list into a Ruby hash":http://github.com/ezmobius/redis-rb/blob/master/lib/redis/client.rb#L72-74 using @Hash::[]@. I had never run into this way of creating a Ruby hash out of an array, but its use here struck me as clever. Check out @ri Hash::[]@ for more on this.
+
+Another good project for working with Redis in Ruby is "redis-namespace":http://github.com/defunkt/redis-namespace by Chris Wanstrath. This library helps you compartmentalize your Redis keys to keep different sets of data separate. We're using this to keep tweets, described above, separate from our A/B testing data. To use it, you just interact with a @Redis::Namespace@ object rather than a @Redis::Client@ object.
+
+{% highlight ruby %}
+redis = Redis.new
+namespaced = Redis::Namespace.new(:my_feature, :redis => redis)
+
+# Interact with namespaced Redis as you would a normal Redis client:
+namespaced.set "foo", "bar"
+namespaced.get "foo"
+# => 'bar'
+namespaced.keys "*"
+# => ['foo']
+
+# The actual key in Redis is prefixed with our namespace:
+redis.keys "*"
+# => ['my_feature:foo']
+{% endhighlight %}
+
+Nice of Chris to take care of that for us, no? 
+
+One last note. How am I accessing Redis from within my Rails app? Currently, I'm taking "a page out of Nick Quaranto's book":http://github.com/qrush/gemcutter/blob/redis/config/environment.rb#L12 and setting a global variable (in @environment.rb@):
+
+{% highlight ruby %}
+$redis = Redis.new # Or a namespaced equivalent
+{% endhighlight %}
+
+This variable provides access to Redis from anywhere in the application. This is not necessarily the best way, but for now it works. I'm happy to hear how I could improve upon this.
+
+If you haven't had a chance to explore Redis yet, I recommend doing so. I hope this post helps push you in the right direction. Some handy resources will be the "Redis command reference":http://code.google.com/p/redis/wiki/CommandReference, "this PDF cheat sheet":http://masonoise.files.wordpress.com/2010/03/redis-cheatsheet-v1.pdf, and following "@antirez":http://twitter.com/antirez, Redis's author, on Twitter.
