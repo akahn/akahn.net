@@ -1,44 +1,74 @@
 ---
-title: Running LaTeX on OS X
+title: Up and Running With LaTeX
 layout: blog
-published: false
+published: true
 ---
 
-Recently I've had the pleasure of getting acquainted with LaTeX. For those that don't know, LaTeX is a typesetting system that turns marked-up text files into precise, readable documents. LaTeX is not just the command-line tool for procesing @.tex@ files, though--it's an entire ecosystem consisting of libraries, packages and tools for myriad purposes. I've been amazed at this ecosystem at times, and frustrated at others. I hope to share some of my successes. 
+Recently I've had the pleasure of getting acquainted with LaTeX. For those that don't know, LaTeX is a typesetting system that turns marked-up text files into precise, readable, print-ready documents. LaTeX is specialized for creating technical documents containing math and equations, but it's also well-suited for any structured document. LaTeX is not just the command-line tool for procesing @.tex@ files, though--it's an entire ecosystem consisting of libraries, packages and tools for myriad purposes. The size of this ecosystem is staggering. At times, it's frustrating. But I've grown to appreciate it the more I've learned.
 
-h2. Installing
-The easiest way to get up and running with LaTeX on Mac OS X is to install "MacTeX":http://www.tug.org/mactex/2009/. It's a big package but it gives you everything you need. Once you have MacTeX installed, take a look in @/usr/local/texlive@ (MacTeX is a specialized version of the TeX Live distribution). Take a minute to spelunk in this directory, since this is where you'll install additional packages that you find on "CTAN":http://www.ctan.org/. You'll also want to add the MacTeX @bin@ directory to your @PATH@.
+What's so great about LaTeX? I love that it demands explicitness from document authors. It doesn't try to guess what you mean. Want a hyphen? Use ==-==. Want a slightly longer dash, suitable for numerical ranges? That's ==--==. Using a dash for punctuation? ==---== inserts an em dash. The same explicitness applies to quotes. How does LaTeX know what is an opening quote and what is a closing quote? You tell it. Use two backticks (``) for an opening quote and two apostrophes for a closing quote (==''==). These are two examples of the attention to detail that is ingrained in the system.
 
-h2. Celebrating LaTeX
-What's so great about LaTeX, anyways? I love that it demands explicitness from document authors. It doesn't try to guess what you want. Want a hyphen? -. Want a slightly longer dash, suitable for numerical ranges? --. Using a dash for punctuation? --- inserts a . The same explicitness applies to quotes. How does LaTeX know what is an opening quote and what is a closing quote? You tell it. Use two backticks (``) for an opening quote and two apostrophes for a closing quote (''). Hyphenation is smart. http://tug.org/docs/liang/ , and the user has control over it. Use \- inside a word to tell LaTeX where to hyphenate. I also found some of these "line breaking commands":http://www.personal.ceu.hu/tex/breaking.htm helpful.
+Some things are more automatic. Hyphenation, for example, is handled by LaTeX. And it's smart.[1] The system sometimes misses possible hyphenation points, but it's very good at avoiding incorrect hyphenation, such as "new-spapers." It also allows manual control of hyphenation. For example, put @\-@ in the middle of a word to identify a possible hyphenation point. I also found some of these "line breaking commands":http://www.personal.ceu.hu/tex/breaking.htm helpful.
 
-h2. The Memoir Class
-The document class is the central factor in determining the look of a document and the structures. MacTeX includes the standard article, report, and book document classes. The document class I've been using is Memoir. This class is large, containing. It is also customizable. 
+LaTeX excels at working with tables, references, bibliographies, footnotes, indexes (and math, of course)--features whose use ranges from tedious to hellish in word processing software. Perhaps its greatest strength is that unlike word processing software, LaTeX forces authors to focus on the content and structure of a document, rather than its presentation. LaTeX takes care of what it looks like. It's the anti-WYSIWYG(What You See Is What You Get).
 
-h3. Customizing Memoir
-Chapterstyles
+h3. Installing LaTeX
 
-No counters
+The easiest way to get started with LaTeX on Mac OS X is to install "MacTeX":http://www.tug.org/mactex/2009/. Once you have MacTeX installed, take a look in @/usr/local/texlive@ (MacTeX is a specialized version of the TeX Live distribution) to see what was installed. You'll want to add @/usr/local/texlive/2009/bin/universal-darwin@ to your @$PATH@. Also make note of @/usr/local/texlive/2009/texmf-local/tex/latex@--this is where you'll install additional LaTeX packages. 
 
-h2. pdfpages
-The document I was preparing was a long packet of reading. Although there are ways to bend LaTeX's strong desire to print one logical page per physical sheet of paper, a more prudent alternative is @pdfpages@. @pdfpages@ is a package for embedding--you guessed it--PDF pages into LaTeX documents. Conveniently, it has the ability to embed multiple pages of a PDF document into a single page of a LaTeX document. The end result: multiple logical pages per physical sheet. After producing a PDF of your original LaTeX document. Some psuedo LaTeX might make this clearer:
+h3. The Memoir Class
 
+You can get far with LaTeX's built in document classes: book, report, article, etc. But for my document, I needed a bit more flexibility. I turned to the Memoir document class. The goal of this class is to combine LaTeX's built-in book class with some of the more common packages that help customize the design of a document. The result is a large class, but one that offers convenience, since it reduces the need for installing additional packages.
+
+It's difficult to summarize what Memoir offers because it does so much. Instead, I'll just share my own experience: Memoir made laying out my document a breeze. It has everything I needed. Refer to "Memoir's exhaustive, 500-page manual":http://mirror.ctan.org/macros/latex/contrib/memoir/memman.pdf (PDF) to learn about what Memoir offers. It's epic.
+
+To install Memoir (or any document class or package), "download it from CTAN (download the memoir document class)":http://www.ctan.org/tex-archive/macros/latex/contrib/memoir/, compile it using the instructions in the README, and then copy the entire @memoir@ directory to the installation directory mentioned above. Then, after running @texhash@, you should be able to compile documents using the Memoir class.
+
+h3. Printing 2-Up
+
+The document I was preparing was a long packet of reading. I wanted to print this document with two pages per sheet, as a photocopied packet from a book would be layedo ut. Although there are ways to bend LaTeX's strong desire to print one logical page per physical sheet of paper (among these are "@booklet@":http://www.ctan.org/tex-archive/macros/latex/contrib/booklet/ and "@twoup@":http://www.ctan.org/tex-archive/macros/latex/contrib/twoup/), a more prudent alternative is pdfpages. pdfpages is a package for embedding--you guessed it--PDF pages into LaTeX documents. Conveniently, it has the ability to embed multiple pages of a PDF document into a single page of a LaTeX document. The end result: multiple logical pages per physical sheet. After producing a PDF of your original document, create another LaTeX document which embeds the compiled PDF, manipulating it to render two PDF pages on one LaTeX page. Some code might make this clearer:
+
+{% highlight latex %}
 \documentclass[landscape]{article}
 \usepackage{pdfpages}
 
 \begin{document}
-\includepdf[nup=2x1,pages=-{my-document.pdf}
+\includepdf[nup=2x1,pages=-]{my-document.pdf}
 \end{document}
+{% endhighlight %}
+
+The document class used here is irrelevant, but it's important to set landscape orientation. The interesting line here is the @\includepdf@ directive. The @nup=2x1@ tells pdfpages to place two pages from the PDF file side-by-side in our document. @pages=-@ tells pdfpages to include all pages of the PDF file. When you compile this document, the output contains two logical pages laid out on a landscape-oriented physical sheet.
+
+For optimal 2-up printing, you'll need to adjust your document's margins. LaTeX assumes that you are printing a book, and thus need a large inner margin (where the page will be bound) and a smaller outer margin. Memoir makes it easy to override these defaults:
+
+{% highlight latex %}
+% Set inner and outer margins to .5 and 1 inch, respectively
+\setlrmarginsandblock{.5in}{1in}{*}
+% Set top and bottom margins to .8 inches
+\setulmarginsandblock{.8in}{.8in}{*}
+% The {*} parameter tells LaTeX to use the measurements
+% provided rather than attempt to calculate a ratio
+{% endhighlight%}
+
+This should set up This package has numerous options and settings, which you can read about in "its manual (pdfpages manual)":http://www.ctan.org/tex-archive/macros/latex/contrib/pdfpages/pdfpages.pdf (PDF). "Get the package here. (download pdfpages from CTAN)":http://www.ctan.org/tex-archive/macros/latex/contrib/pdfpages/
+
+h3. XeLaTeX
+
+One point of frustration I had with LaTeX was its font handling. The routine for preparing a typeface to be used with LaTeX seemed so elaborate that it scared me away. But then I came across XeLaTeX, a project that brings modern, convenient typography to LaTeX.
+
+Using XeLaTeX solved two problems for me. One was using Unicode characters in my documents. For some reason, LaTeX doesn't support this by default, requiring external packages for this purpose. Using XeLaTeX, it was as simple as using Unicode characters in an HTML document. XeLaTeX also makes it dropdead simple to use any OpenType or TrueType typeface installed on your system. Replacing LaTeX's handsome but staid "Computer Modern":http://en.wikipedia.org/wiki/Computer_modern with the dignified, refined "Baskerville":http://en.wikipedia.org/wiki/Baskerville was as simple as @\setmainfont[Mapping=tex-text]{Baskerville}@.
+
+h3. Vim
+
+The de-facto standard LaTeX plugin for Vim is "Latex-Suite":http://vim-latex.sourceforge.net/. To compile your document to PDF, use the keystroke @<Leader>ll@ (@<Leader>@ is commonly set to , or \). The compilation log is displayed in a preview window, and any compilation errors are shown in the QuickFix window. To set Latex Suite to use xelatex to compile your document, add @let g:Tex_CompileRule_pdf = 'xelatex -interaction=nonstopmode $*'@ to your @.vimrc@.
 
 
-h2. XeLaTeX
-One point of frustration I had with LaTeX was that, even after recognizing that I had to sacrifice complete control over the look of my documents in order to gain the sanity of only worrying about the content and structure of my document, I wanted some typographical freedom. Typography in LaTeX is painful. You must choose from a relatively small number of typefaces, and then jump through a series of hoops to compile them in order to prepare them for use in LaTeX. I gave up before I even tried. But then I came across XeLaTeX, a project that brings modern, convenient typography to LaTeX. Unicode characters? No problem. Don't want to jump through hoops to use _x_ font for your document. No problem. MacTeX comes with
+h3. Further Reading
 
-Using XeLaTeX solved two problems for me. One was using Unicode characters in my documents. For some reason, LaTeX doesn't support this by default and requires external packages. It also makes it simple to control a document's typography. Replacing LaTeX's handsome but staid "Computer Modern":http://en.wikipedia.org/wiki/Computer_modern was as simple as @\setmainfont[Mapping=tex-text]{Baskerville}@ (if you can call a "1757 typeface":http://en.wikipedia.org/wiki/Baskerville "fresh").
+There's a lot more. This post is the tip of the iceberg. If you're interested in learning more, here are some resources that might help:
 
-h2. Vim's Latex-Suite
-This is an exhaustive Vim plugin. Although this is an exhaustive plugin, I've only taken advantage of its compilation feature. To compile your document to PDF, use the keystroke @<Leader>ll@ (@<Leader>@ is commonly set to , or \). The compilation log is displayed in a preview window, and any compilation errors are shown in a QuickFix window. To set Latex Suite to use xelatex to compile the documents, add @let g:Tex_CompileRule_pdf = 'xelatex -interaction=nonstopmode $*'@ to your @.vimrc@.
+* The "LaTeX Wikibook":http://en.wikibooks.org/wiki/LaTeX is a thorough, clear, and well-organized reference guide to LaTeX. I found the sections on formatting and tables particularly helpful.
+* "LyX":http://www.lyx.org/ is a WYSIWYM ("what you see is what you mean") graphical editor for LaTeX. This could be a more approachable entrée into LaTeX for folks that don't want to work with plain text.
+* The #latex channel on Freenode has been a helpful and friendly resource. It's not just scientists and mathematicians in there.
 
-
-h2. Further Reading
-LaTeX WikiBook. TeXShop is a WYSIWYM ("what you see is what you mean") editor. #latex
+fn1. "Frank Liang's 1983 dissertation":http://tug.org/docs/liang/ should give you a sense of how much thought and effort has gone into hyphenation in LaTeX.
