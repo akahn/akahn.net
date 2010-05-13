@@ -6,7 +6,7 @@ published: true
 
 Recently I've had the pleasure of getting acquainted with LaTeX. For those that don't know, LaTeX is a typesetting system that turns marked-up text files into precise, readable, print-ready documents. LaTeX is specialized for creating technical documents containing math and equations, but it's also well-suited for any structured document. LaTeX is not just the command-line tool for procesing @.tex@ files, though--it's an entire ecosystem consisting of libraries, packages and tools for myriad purposes. The size of this ecosystem is staggering. At times, it's frustrating. But I've grown to appreciate it the more I've learned.
 
-What's so great about LaTeX? I love that it demands explicitness from document authors. It doesn't try to guess what you mean. Want a hyphen? Use ==-==. Want a slightly longer dash, suitable for numerical ranges? That's ==--==. Using a dash for punctuation? ==---== inserts an em dash. The same explicitness applies to quotes. How does LaTeX know what is an opening quote and what is a closing quote? You tell it. Use two backticks (``) for an opening quote and two apostrophes for a closing quote (==''==). These are two examples of the attention to detail that is ingrained in the system.
+What's so great about LaTeX? I love that it demands explicitness. It doesn't try to guess what you mean. Want a hyphen? Use ==-==. Want a slightly longer dash, suitable for numerical ranges? That's ==--==. Using a dash for punctuation? ==---== inserts an em dash. The same explicitness applies to quotes. How does LaTeX know what is an opening quote and what is a closing quote? You tell it. Use two backticks (``) for an opening quote and two apostrophes for a closing quote (==''==). These are two examples of the attention to detail that LaTeX promotes.
 
 Some things are more automatic. Hyphenation, for example, is handled by LaTeX. And it's smart.[1] The system sometimes misses possible hyphenation points, but it's very good at avoiding incorrect hyphenation, such as "new-spapers." It also allows manual control of hyphenation. For example, put @\-@ in the middle of a word to identify a possible hyphenation point. I also found some of these "line breaking commands":http://www.personal.ceu.hu/tex/breaking.htm helpful.
 
@@ -20,13 +20,13 @@ h3. The Memoir Class
 
 You can get far with LaTeX's built in document classes: book, report, article, etc. But for my document, I needed a bit more flexibility. I turned to the Memoir document class. The goal of this class is to combine LaTeX's built-in book class with some of the more common packages that help customize the design of a document. The result is a large class, but one that offers convenience, since it reduces the need for installing additional packages.
 
-It's difficult to summarize what Memoir offers because it does so much. Instead, I'll just share my own experience: Memoir made laying out my document a breeze. It has everything I needed. Refer to "Memoir's exhaustive, 500-page manual":http://mirror.ctan.org/macros/latex/contrib/memoir/memman.pdf (PDF) to learn about what Memoir offers. It's epic.
+It's difficult to summarize what Memoir offers because it does so much. Instead, I'll just share my own experience: Memoir made laying out my document a breeze. I continually got the impression that the creators of Memoir had thought of everything. Refer to "Memoir's exhaustive, 500-page manual":http://mirror.ctan.org/macros/latex/contrib/memoir/memman.pdf (PDF) to learn about what it offers. It's epic.
 
 To install Memoir (or any document class or package), "download it from CTAN (download the memoir document class)":http://www.ctan.org/tex-archive/macros/latex/contrib/memoir/, compile it using the instructions in the README, and then copy the entire @memoir@ directory to the installation directory mentioned above. Then, after running @texhash@, you should be able to compile documents using the Memoir class.
 
 h3. Printing 2-Up
 
-The document I was preparing was a long packet of reading. I wanted to print this document with two pages per sheet, as a photocopied packet from a book would be layedo ut. Although there are ways to bend LaTeX's strong desire to print one logical page per physical sheet of paper (among these are "@booklet@":http://www.ctan.org/tex-archive/macros/latex/contrib/booklet/ and "@twoup@":http://www.ctan.org/tex-archive/macros/latex/contrib/twoup/), a more prudent alternative is pdfpages. pdfpages is a package for embedding--you guessed it--PDF pages into LaTeX documents. Conveniently, it has the ability to embed multiple pages of a PDF document into a single page of a LaTeX document. The end result: multiple logical pages per physical sheet. After producing a PDF of your original document, create another LaTeX document which embeds the compiled PDF, manipulating it to render two PDF pages on one LaTeX page. Some code might make this clearer:
+The document I was preparing was a long packet of reading. I wanted to print this document with two pages per sheet, as a photocopied packet from a book would be layed out. Although there are ways to bend LaTeX's strong desire to print one logical page per physical sheet of paper (among these are "@booklet@":http://www.ctan.org/tex-archive/macros/latex/contrib/booklet/ and "@twoup@":http://www.ctan.org/tex-archive/macros/latex/contrib/twoup/), a more prudent alternative is pdfpages. pdfpages is a package for embedding--you guessed it--PDF pages into LaTeX documents. Conveniently, it has the ability to embed multiple pages of a PDF document into a single page of a LaTeX document. The end result: multiple logical pages per physical sheet. After producing a PDF of your original document, create another LaTeX document which embeds the compiled PDF, manipulating it to render two PDF pages on one LaTeX page. Some code might make this clearer:
 
 {% highlight latex %}
 \documentclass[landscape]{article}
@@ -39,7 +39,7 @@ The document I was preparing was a long packet of reading. I wanted to print thi
 
 The document class used here is irrelevant, but it's important to set landscape orientation. The interesting line here is the @\includepdf@ directive. The @nup=2x1@ tells pdfpages to place two pages from the PDF file side-by-side in our document. @pages=-@ tells pdfpages to include all pages of the PDF file. When you compile this document, the output contains two logical pages laid out on a landscape-oriented physical sheet.
 
-For optimal 2-up printing, you'll need to adjust your document's margins. LaTeX assumes that you are printing a book, and thus need a large inner margin (where the page will be bound) and a smaller outer margin. Memoir makes it easy to override these defaults:
+For optimal 2-up printing, you'll need to adjust your original document's margins. LaTeX assumes that you are printing a book, and thus need a large inner margin (where the binding would be) and a smaller outer margin. Memoir makes it easy to override these defaults:
 
 {% highlight latex %}
 % Set inner and outer margins to .5 and 1 inch, respectively
@@ -50,18 +50,17 @@ For optimal 2-up printing, you'll need to adjust your document's margins. LaTeX 
 % provided rather than attempt to calculate a ratio
 {% endhighlight%}
 
-This should set up This package has numerous options and settings, which you can read about in "its manual (pdfpages manual)":http://www.ctan.org/tex-archive/macros/latex/contrib/pdfpages/pdfpages.pdf (PDF). "Get the package here. (download pdfpages from CTAN)":http://www.ctan.org/tex-archive/macros/latex/contrib/pdfpages/
+pdfpages has numerous options for arranging booklet-style documents, which you can read about in "its manual (pdfpages manual)":http://www.ctan.org/tex-archive/macros/latex/contrib/pdfpages/pdfpages.pdf (PDF). "Get the package here. (download pdfpages from CTAN)":http://www.ctan.org/tex-archive/macros/latex/contrib/pdfpages/
 
-h3. XeLaTeX
+h3. Better Typography
 
-One point of frustration I had with LaTeX was its font handling. The routine for preparing a typeface to be used with LaTeX seemed so elaborate that it scared me away. But then I came across XeLaTeX, a project that brings modern, convenient typography to LaTeX.
+One point of frustration I had with LaTeX was its font handling. The routine for preparing a typeface to be used with LaTeX was so elaborate that it scared me away. But then I came across XeLaTeX, a project that brings modern, convenient typography to LaTeX.
 
 Using XeLaTeX solved two problems for me. One was using Unicode characters in my documents. For some reason, LaTeX doesn't support this by default, requiring external packages for this purpose. Using XeLaTeX, it was as simple as using Unicode characters in an HTML document. XeLaTeX also makes it dropdead simple to use any OpenType or TrueType typeface installed on your system. Replacing LaTeX's handsome but staid "Computer Modern":http://en.wikipedia.org/wiki/Computer_modern with the dignified, refined "Baskerville":http://en.wikipedia.org/wiki/Baskerville was as simple as @\setmainfont[Mapping=tex-text]{Baskerville}@.
 
-h3. Vim
+h3. Editing LaTeX in Vim
 
-The de-facto standard LaTeX plugin for Vim is "Latex-Suite":http://vim-latex.sourceforge.net/. To compile your document to PDF, use the keystroke @<Leader>ll@ (@<Leader>@ is commonly set to , or \). The compilation log is displayed in a preview window, and any compilation errors are shown in the QuickFix window. To set Latex Suite to use xelatex to compile your document, add @let g:Tex_CompileRule_pdf = 'xelatex -interaction=nonstopmode $*'@ to your @.vimrc@.
-
+The "Latex-Suite":http://vim-latex.sourceforge.net/ plugin for Vim is a lifesaver. It provides syntax highlighting, folding (handy for hiding sections or chapters you're not currently working on) and numerous mappings that I haven't taken the time to learn. One exception is the mapping for compiling. To compile your document to PDF, use @,ll@. The compilation log is displayed in a preview window, and any compilation errors pop up in a QuickFix window. To set Latex-Suite to use xelatex to compile your document, add @let g:Tex_CompileRule_pdf = 'xelatex -interaction=nonstopmode $*'@ to your @.vimrc@.
 
 h3. Further Reading
 
