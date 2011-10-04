@@ -51,17 +51,29 @@ h1 {
   font-size: 37px;
   margin: 24px 0;
   line-height: 48px;
+  background-color: transparent;
+  overflow: visible;
 }
 
-h1 a, 
+h1 a,
 h2 a {
   color: black;
   text-decoration: none;
 }
 
-h1 a:hover, 
+h1 a {
+ font-family: 'Sansita One', cursive;
+ font-size: 72px;
+ color: #E8E8E8;
+ text-shadow: 0 -1px 0 white, 0 3px 3px rgba(0, 0, 0, 0.6), 0 6px 6px rgba(0, 0, 0, .4), 0 10px 10px rgba(0, 0, 0, 0.3);
+ -webkit-mask-image: -webkit-linear-gradient(#F7F7F7 50%, #E8E8E8 50%, #E8E8E8);
+ line-height: 90px;
+ letter-spacing: -4px;
+}
+
+h1 a:hover,
 h2 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 h3 {
@@ -113,13 +125,13 @@ a code {
 }
 
 h1, div#body {
-  background-color: white;
   padding: 0 0 0 26px;
   float: left;
   width: 960px;
 }
 
 div#body {
+  background-color: white;
   -webkit-border-bottom-right-radius: 8px;
   -moz-border-radius-bottomright: 8px;
   margin-bottom: 26px;
