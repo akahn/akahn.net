@@ -1,7 +1,7 @@
 /* Reset from http://meyerweb.com/eric/tools/css/reset/ */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
+a, acronym, address, big, cite, code,
 del, dfn, em, font, img, ins, kbd, q, s, samp,
 small, strike, strong, sub, sup, tt, var,
 b, u, i, center,
@@ -122,6 +122,11 @@ code {
 
 a code {
   text-decoration: underline;
+}
+
+abbr {
+  text-decoration: underline;
+  cursor: help;
 }
 
 h1, div#body {
