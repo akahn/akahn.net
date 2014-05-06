@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-jekyll --pygments && rsync -e ssh -avz --delete _site/ akahn.net:/home/akahn/akahn.net
+jekyll build && rsync -e ssh -avz --delete _site/ akahn.net:/home/akahn/akahn.net
