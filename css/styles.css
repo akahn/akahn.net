@@ -41,7 +41,7 @@ table {
 }
 
 body {
-  background-color: #7B7381;
+  background-color: #78B540;
   margin: 0;
   padding: 0;
   font-family: Helvetica Neue, Helvetica, sans-serif;
@@ -64,9 +64,7 @@ h2 a {
 h1 a {
  font-family: 'Sansita One', cursive;
  font-size: 72px;
- color: #E8E8E8;
- text-shadow: 0 -1px 0 white, 0 3px 3px rgba(0, 0, 0, 0.6), 0 6px 6px rgba(0, 0, 0, .4), 0 10px 10px rgba(0, 0, 0, 0.3);
- -webkit-mask-image: -webkit-linear-gradient(#F7F7F7 50%, #E8E8E8 50%, #E8E8E8);
+ color: white;
  line-height: 90px;
  letter-spacing: -4px;
 }
@@ -169,7 +167,7 @@ h2 {
 }
 
 a {
-  color: #63424A;
+  color: #63A725;
 }
 
 p.intro {
