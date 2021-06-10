@@ -3,7 +3,7 @@ title: Reflections on IntelliJ from a Vim Die-Hard
 layout: blog
 ---
 
-_Note: This piece was originally published on the Librato blog in 2008_
+_Note: This piece was originally published on the Librato blog in 2016_
 
 <p>In my work as an Integrations Engineer at Librato, I find myself dabbling in many of our codebases. In the last few months, I’ve worked in Ruby, JavaScript, Python, Go, and Java projects. Having used Vim for over ten years, my instinct was to continue using it when working in all of these projects. It didn’t take long to change my mind, and here is why.</p>
 <h3>First Steps</h3>
