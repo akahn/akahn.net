@@ -8,7 +8,7 @@ from some old Ruby code that processes a CSV file as part of a billing job. The
 error:
 
 ```
-RangeError: bignum too big to convert into `long long'
+RangeError: bignum too big to convert into `long long`
 ```
 
 Another engineer who was looking at the problem hadn't yet tracked down the
@@ -40,12 +40,12 @@ question: how likely is it for a MongoDB ObjectId to consist entirely of the
 numerical hexadecimal values? Looking at all the bytes from 00 to FF we can see
 that 90 out of 256 contain only numbers: 0–9, 10-19, 20-29, etc., all the way
 through 90-99. Given there are 12 bytes in the ID, the probability is
-`((90/256) ^ 12)` . That's roughly 0.000003565 or about 1 in 280,000—not so
-rare after all.
+`((90/256) ^ 12)` . That's roughly 0.000003565 or about 1 in 280,000—maybe we
+shouldn't rush out and buy a lottery ticket after all.
 
 ## Looking closer at the MongoDB ObjectId
 
-But as it turns out, not all 12 of those bytes are generated randomly. According
+As it turns out, not all 12 of those bytes are generated randomly. According
 to [the docs](https://www.mongodb.com/docs/manual/reference/method/ObjectId/) a MongoDB ObjectId consists of:
 
 * A Unix timestamp (4 bytes)
@@ -55,7 +55,7 @@ to [the docs](https://www.mongodb.com/docs/manual/reference/method/ObjectId/) a 
 So the last 8 bytes are generated with some randomness, but the first 4 are a timestamp. This leads to a new
 question: how common is it for a Unix timestamp (which is defined as number of seconds since January 1, 1970), when
 hex-encoded, to contain only the 90 "numerical" hexadecimal values? I
-wrote [a program](https://gist.github.com/akahn/46cfcdd2e82e8e5b3031f87562c7d8f2) to determine that, and here's the
+wrote [a program](https://github.com/akahn/lottery/blob/main/main.go) to determine that, and here's the
 output:
 
 ```
@@ -130,7 +130,7 @@ nil
 
 # 64-bit integer is too big
 pry(main) > Account.find(2 ** 63)
-RangeError : bignum too big to convert into `long long'
+RangeError : bignum too big to convert into `long long`
 
 # if that same integer is represented as a string, however, no problem
 pry(main)> Account.find((2**63).to_s)
@@ -173,13 +173,11 @@ number".
 
 ## Conclusion
 
+Before ending, I'd like to call attention to some lessons we can draw from this experience:
 
-* Assumptions are safe to make, until they aren't any more
-* If you're printing a Ruby exception, print the backtrace too
-* But that backtrace may not point to the _actual_ C code underlying a Ruby API
-* Something that seems rare may not actually be rare, if there is sampling bias
+* The Ruby CSV library is more "schemaless" than I would like.
+* If you're printing a Ruby exception, print the backtrace too.
+* But that backtrace may not point to the _actual_ C code underlying a Ruby API.
+* Something that seems rare may not actually be rare, if there is sampling bias.
 
-Thank you for reading this long-winded . In a way this has been an exercise in numerology -- looking for meaning in
-numbers where there isn't any. But at the same time it has been a useful exercise in thinking about how computers work.
-Despite 12+ years working in the industry, some of these concepts (like, how does a computer work?) are relatively new
-for me.
+Until next time!
