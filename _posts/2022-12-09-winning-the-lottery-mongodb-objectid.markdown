@@ -8,40 +8,43 @@ from some old Ruby code that processes a CSV file as part of a billing job. The
 error:
 
 ```
-RangeError: bignum too big to convert into `long long`
+RangeError: bignum too big to convert into `long long'
 ```
 
 Another engineer who was looking at the problem hadn't yet tracked down the
 source of the problem (the script didn't print a backtrace), but noticed
 something unusual: the error was associated with a user account whose MongoDB
-identifier consisted of all numerical characters.  How can this happen? This
-script has been running for 3 years, on accounts as old as 7 years, with this
-never problem never occurring! MongoDB ObjectIds are 12-byte values with a
-bunch of randomness built-in, how could one contain all numbers? What are the
-odds of this happening? Should I (or this customer) go buy a lottery ticket?
-Let's dig in to the probability of this happening.
+identifier consisted of all numerical characters. This script has been running
+for 3 years, on accounts as old as 7 years, without such an ID coming up!
+MongoDB ObjectIds are 12-byte values with a bunch of randomness
+built-in, how could one contain all numbers? What are the odds of this
+happening? Should I (or this customer) go buy a lottery ticket?  Let's dig in
+hexadecimal, MongoDB ObjectIds, probability, and the CSV-parsing bug that led us here.
 
 ## Hexadecimal encoding
 
-Looking at a MongoDB ObjectId we can see that it consists of 24 characters whose possible values range from 0-9 and a-f. Here's
-an example: `a07f1f77bcf86cd7994390a1`. This is because these 24 characters are actually 12 hexadecimal-encoded bytes.
-In the above example, the hexadecimal a0 corresponds to decimal 161. The next pair, 7f, corresponds to 127. With
-hexadecimal, it's possible to express any number from 0 to 255 (all the integers that can be stored in a byte, or 8
-bits) in just two alphanumeric characters. That's pretty convenient, because it's more compact and easier to read.
-Compare the above identifier with these other representations of the same ID:
+Looking at a MongoDB ObjectId we see 24 characters whose possible values range
+from 0-9 and a-f. This is because the 12 bytes mentioned above are expressed in
+hexadecimal, where each byte is represented by a pair of characters. For example, in the `a07f1f77bcf86cd7994390a1`.  In
+the above example, the hexadecimal a0 corresponds to decimal 161. The next
+pair, 7f, corresponds to 127. With hexadecimal, it's possible to express any
+number from 0 to 255 (all the integers that can be stored in a byte, or 8 bits)
+in just two alphanumeric characters. That's pretty convenient, because it's
+more compact and easier to read or share.  Compare the compact hex ID above with these other
+representations of the same ID:
 
-* A series of integers decimal, separated by spaces: `160 127 31 119 188 248 108 215 153 67 144 161`
+* A series of decimal integers, separated by spaces: `160 127 31 119 188 248 108 215 153 67 144 161`
 * Raw binary: `101000000111111100011111011101111011110011111000011011001101011110011001010000111001000010100001`
 
 ## Probability
 
-Now that we know about hexadecimal we can start to answer our original
+Now that we know about hexadecimal encoding we can start to answer our original
 question: how likely is it for a MongoDB ObjectId to consist entirely of the
 numerical hexadecimal values? Looking at all the bytes from 00 to FF we can see
 that 90 out of 256 contain only numbers: 0–9, 10-19, 20-29, etc., all the way
 through 90-99. Given there are 12 bytes in the ID, the probability is
-`((90/256) ^ 12)` . That's roughly 0.000003565 or about 1 in 280,000—maybe we
-shouldn't rush out and buy a lottery ticket after all.
+`((90/256) ^ 12)` . That's roughly 0.000003565 or about 1 in 280,000—somewhat
+rare but maybe we shouldn't rush out and buy a lottery ticket after all.
 
 ## Looking closer at the MongoDB ObjectId
 
@@ -73,13 +76,13 @@ output:
 ```
 
 The occurrences vary based on the time range being scanned, but the overall result is about 3.8%. So, given that only 8
-of our bytes are randomly generated, our new calculation is: `0.038261 * ((90/256) ^ 8)`, whose result
-is 0.000008928. One in 112,000! (Stats/math/probability experts,
+of our bytes are randomly generated, our new calculation is: `0.038261 * ((90/256) ^ 8)`, which comes to
+0.000008928. One in 112,000! (Stats/math/probability experts,
 please [send me a correction](mailto:alexanderkahn@gmail.com) if I'm doing this wrong!)
 
 Given the decent likelihood of this happening, how have we never hit this bug before in the millions of accounts that
 have been created on Netlify? How is this only happening now? The answer is that this is billing code: it's only
-concerned with accounts that paid (or at some point have paid) us money. As with any freemium SaaS product, this is a
+considering accounts that pay us money. As with any freemium SaaS product, this is a
 tiny fraction of the overall number of accounts. So, what about all account IDs? How many of _them_ contain only
 numerical account IDs? Let's ask our data warehouse:
 
@@ -88,16 +91,20 @@ SELECT COUNT(*) FROM ACCOUNTS WHERE ACCOUNT_ID REGEXP '[0-9]{24}';
 -- --> 131
 ```
 
-This is actually more than I would expect. With our 3.7 million account records and a `0.000008928` chance of a
-numerical
-ID, I'd expect to find 330 such account IDs, and this is fairly close. What can explain this discrepancy? Part of the
-answer is that probabilities predict likelihoods, but outcomes in the real world vary. In other words,
-although a coin flip has a 50% chance of landing "heads", it's entirely possible to get 10 heads in a row. Additionally,
-user behavior isn't randomly distributed. For example, they are more likely to create accounts on weekdays during waking
-hours (and they're mostly concentrated in North America and Europe). And the timestamps that can be encoded as the
-numerical hexadecimal values are not randomly distributed either. As we can see from the above Goroutine log output,
-some time ranges have greater likelihood of containing these timestamps than others. In a future post, I plan to analyze
-the data to delve into where in time these lucky numbers are concentrated and why.
+With our 3.7 million account records and a `0.000008928` chance of a numerical
+ID, this is actually less than the 330 account IDs we'd expect to see, but this
+is fairly close. What can explain this discrepancy? Part of the answer is that
+probabilities predict likelihoods, but outcomes in the real world vary. In
+other words, although a coin flip has a 50% chance of landing "heads", it's
+entirely possible to get 10 heads in a row. Additionally, user behavior isn't
+randomly distributed. For example, they are more likely to create accounts on
+weekdays during waking hours (and they're mostly concentrated in North America
+and Europe). And the timestamps that can be encoded as the numerical
+hexadecimal values are not randomly distributed either. As we can see from the
+above Goroutine log output, some time ranges have greater likelihood of
+containing these timestamps than others. In a future post, I plan to analyze
+the data to delve into where in time these lucky numbers are concentrated and
+why.
 
 ## The bug
 
