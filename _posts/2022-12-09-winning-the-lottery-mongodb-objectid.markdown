@@ -17,8 +17,8 @@ something unusual: the error was associated with a user account whose MongoDB
 identifier consisted of all numerical characters. This script has been running
 for 3 years, on accounts as old as 7 years, without such an ID coming up!
 MongoDB ObjectIds are 12-byte values with a bunch of randomness
-built-in, how could one contain all numbers? What are the odds of this
-happening? Should I (or this customer) go buy a lottery ticket?  Let's dig in
+built-in—how could one contain all numbers? What are the odds of this
+happening? Should I (or this customer) go buy a lottery ticket?  To find out, let's dig in
 hexadecimal, MongoDB ObjectIds, probability, and the CSV-parsing bug that led us here.
 
 ## Hexadecimal encoding
